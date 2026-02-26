@@ -1,0 +1,14 @@
+api_key: ""
+
+timezone: "UTC"
+
+schedules:
+  - name: "Morning"
+    cron: "0 8 * * 1-5"
+  - name: "Evening"
+    cron: "0 19 * * *"
+
+ping:
+  model: "claude-sonnet-4-6"
+  max_tokens: 10
+  prompt: "hi"
