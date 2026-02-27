@@ -9,6 +9,7 @@ defmodule PingScheduler do
         api_key = PingScheduler.Config.api_key(config)
 
         if is_nil(api_key) or api_key == "" do
+          send_noti({:error, "API KEY not found"}, config)
           System.halt(1)
         end
 
