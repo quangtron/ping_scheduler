@@ -1,10 +1,14 @@
 api_key: ""
 
+telegram:
+  bot_token: ""
+  chat_id: ""
+
 timezone: "UTC"
 
 schedules:
   - name: "Morning"
-    cron: "0 8 * * 1-5"
+    cron: "0 8 * * *"
   - name: "Evening"
     cron: "0 19 * * *"
 

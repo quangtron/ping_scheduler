@@ -1,29 +1,70 @@
 defmodule PingScheduler.Pinger do
   @api_url "https://api.anthropic.com/v1/messages"
+  @default_max_retries 3
+  @default_base_delay 5000
 
   def ping(api_key, ping_config) do
     model = Map.get(ping_config, "model", "claude-sonnet-4-6")
     max_tokens = Map.get(ping_config, "max_tokens", 10)
     prompt = Map.get(ping_config, "prompt", "hi")
+    max_retries = Map.get(ping_config, "max_retries", @default_max_retries)
+    base_delay = Map.get(ping_config, "retry_delay", @default_base_delay)
 
-    start_time = System.system_time(:millisecond)
+    ping_with_retry(api_key, model, max_tokens, prompt, max_retries, base_delay, 0, 0)
+  end
 
+  defp ping_with_retry(
+         _api_key,
+         _model,
+         _max_tokens,
+         _prompt,
+         max_retries,
+         _base_delay,
+         _start_time,
+         attempts
+       )
+       when attempts >= max_retries do
+    {:error, "Max retries (#{max_retries}) exceeded", 0}
+  end
+
+  defp ping_with_retry(
+         api_key,
+         model,
+         max_tokens,
+         prompt,
+         max_retries,
+         base_delay,
+         start_time,
+         attempts
+       ) do
     case send_ping(api_key, model, max_tokens, prompt) do
       {:ok, _response} ->
-        duration = System.system_time(:millisecond) - start_time
-        {:ok, :success, duration}
+        result = if attempts > 0, do: "retry success (#{attempts})", else: "success"
+        {:ok, result}
 
-      {:error, _reason} ->
-        case send_ping(api_key, model, max_tokens, prompt) do
-          {:ok, _response} ->
-            duration = System.system_time(:millisecond) - start_time
-            {:ok, :retried_success, duration}
+      {:error, reason} ->
+        if attempts < max_retries - 1 do
+          delay = calculate_delay(attempts, base_delay)
+          Process.sleep(delay)
 
-          {:error, reason} ->
-            duration = System.system_time(:millisecond) - start_time
-            {:error, reason, duration}
+          ping_with_retry(
+            api_key,
+            model,
+            max_tokens,
+            prompt,
+            max_retries,
+            base_delay,
+            start_time,
+            attempts + 1
+          )
+        else
+          {:error, reason}
         end
     end
+  end
+
+  defp calculate_delay(attempt, base_delay) do
+    (base_delay * :math.pow(2, attempt)) |> round()
   end
 
   defp send_ping(api_key, model, max_tokens, prompt) do

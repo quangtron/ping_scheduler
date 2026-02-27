@@ -2,7 +2,7 @@ defmodule PingScheduler.Config do
   @config_file "config/config.yaml"
 
   def load do
-    config_path = Path.expand(@config_file, Path.dirname(__DIR__))
+    config_path = Path.expand(@config_file, File.cwd!())
 
     case YamlElixir.read_from_file(config_path) do
       {:ok, config} ->
@@ -10,7 +10,7 @@ defmodule PingScheduler.Config do
         {:ok, Map.put(config, :api_key, api_key)}
 
       {:error, reason} ->
-        {:error, "Failed to load config: #{reason}"}
+        {:error, "Failed to load config: #{inspect(reason)}"}
     end
   end
 
