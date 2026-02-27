@@ -5,9 +5,11 @@ defmodule PingScheduler.Notifier do
     chat_id = Map.get(telegram, "chat_id", "")
 
     if valid_config?(bot_token, chat_id) do
+      IO.inspect("22222222")
       message = format_message(status, detail)
       send_telegram(bot_token, chat_id, message)
     else
+      IO.inspect("11111111")
       {:error, "Telegram not configured"}
     end
   end
