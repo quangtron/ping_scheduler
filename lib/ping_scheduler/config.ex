@@ -44,6 +44,4 @@ defmodule PingScheduler.Config do
       "prompt" => "hi"
     })
   end
-
-  def api_key(config), do: Map.get(config, :api_key)
 end

@@ -6,7 +6,7 @@ defmodule PingScheduler do
   def run do
     case PingScheduler.Config.load() do
       {:ok, config} ->
-        api_key = PingScheduler.Config.api_key(config)
+        api_key = config["api_key"]
 
         if is_nil(api_key) or api_key == "" do
           send_noti({:error, "API KEY not found"}, config)
