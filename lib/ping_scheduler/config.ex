@@ -6,19 +6,22 @@ defmodule PingScheduler.Config do
 
     case YamlElixir.read_from_file(config_path) do
       {:ok, config} ->
-        api_key = get_api_key(config)
-        {:ok, Map.put(config, :api_key, api_key)}
+        api_key = get_config(config, "api_key", System.get_env("ANTHROPIC_API_KEY"))
+        bot_token = get_config(config, "bot_token", System.get_env("BOT_TOKEN"))
+        chat_id = get_config(config, "chat_id", System.get_env("CHAT_ID"))
+
+        {:ok, Map.merge(config, %{api_key: api_key, bot_token: bot_token, chat_id: chat_id})}
 
       {:error, reason} ->
         {:error, "Failed to load config: #{inspect(reason)}"}
     end
   end
 
-  defp get_api_key(config) do
+  defp get_config(config, field_name, env_value) do
     config
-    |> Map.get("api_key")
+    |> Map.get(field_name)
     |> then(fn
-      nil -> System.get_env("ANTHROPIC_API_KEY")
+      nil -> env_value
       key -> key
     end)
   end
