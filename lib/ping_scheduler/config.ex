@@ -12,8 +12,8 @@ defmodule PingScheduler.Config do
 
         {:ok,
          Map.merge(config, %{
-           api_key: api_key,
-           telegram: %{bot_token: bot_token, chat_id: chat_id}
+           "api_key" => api_key,
+           "telegram" => %{bot_token: bot_token, chat_id: chat_id}
          })}
 
       {:error, reason} ->
