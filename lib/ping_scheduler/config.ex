@@ -10,7 +10,11 @@ defmodule PingScheduler.Config do
         bot_token = get_config(config, ["telegram", "bot_token"], System.get_env("BOT_TOKEN"))
         chat_id = get_config(config, ["telegram", "chat_id"], System.get_env("CHAT_ID"))
 
-        {:ok, Map.merge(config, %{api_key: api_key, bot_token: bot_token, chat_id: chat_id})}
+        {:ok,
+         Map.merge(config, %{
+           api_key: api_key,
+           telegram: %{bot_token: bot_token, chat_id: chat_id}
+         })}
 
       {:error, reason} ->
         {:error, "Failed to load config: #{inspect(reason)}"}
