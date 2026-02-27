@@ -9,7 +9,7 @@ defmodule PingScheduler.Notifier do
       message = format_message(status, detail)
       send_telegram(bot_token, chat_id, message)
     else
-      IO.inspect("11111111")
+      IO.inspect(System.get_env("ANTHROPIC_API_KEY"), label: "1111111111")
       {:error, "Telegram not configured"}
     end
   end
