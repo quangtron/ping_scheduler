@@ -8,9 +8,9 @@ timezone: "UTC"
 
 schedules:
   - name: "Morning"
-    cron: "0 8 * * *"
+    cron: "0 1 * * *"
   - name: "Evening"
-    cron: "0 19 * * *"
+    cron: "0 6 * * *"
 
 ping:
   model: "claude-sonnet-4-6"
