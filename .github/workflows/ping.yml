@@ -3,8 +3,12 @@ name: Claude Pro Ping Scheduler
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 1 * * *"
-    - cron: "0 6 * * *"
+    - cron: "12 1 * * *"
+    - cron: "22 1 * * *"
+    - cron: "29 3 * * *"
+    - cron: "32 3 * * *"
+    - cron: "12 6 * * *"
+    - cron: "22 6 * * *"
 
 jobs:
   ping:
