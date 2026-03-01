@@ -1,14 +1,9 @@
 name: Claude Pro Ping Scheduler
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: "12 1 * * *"
-    - cron: "22 1 * * *"
-    - cron: "29 3 * * *"
-    - cron: "32 3 * * *"
-    - cron: "12 6 * * *"
-    - cron: "22 6 * * *"
+    - cron: "12 1,6,11,16 * * *"
+  workflow_dispatch:
 
 jobs:
   ping:
@@ -34,5 +29,5 @@ jobs:
           ANTHROPIC_API_KEY: ${{ secrets.API_KEY }}
           BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
           CHAT_ID: ${{ secrets.CHAT_ID }}
-          SCHEDULE_NAME: ${{ github.event.schedule == '0 1 * * *' && 'Morning' || 'Evening' }}
+          SCHEDULE_NAME: "Ping"
         run: mix run -e PingScheduler.run
